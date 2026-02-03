@@ -1,537 +1,276 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hiragana Romaji Onthuller</title>
+    <title>Japanse Memory Oefening - Netlify Ready</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
         
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
+            background-color: #f0f2f5;
+            color: #1f2937;
         }
 
-        .min-h-screen {
-            min-height: 100vh;
+        .card {
+            transition: all 0.2s ease-out;
+            cursor: pointer;
+            user-select: none;
+            min-height: 100px;
         }
 
-        .bg-white {
-            background-color: #ffffff;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-
-        .items-center {
-            align-items: center;
-        }
-
-        .justify-center {
-            justify-content: center;
-        }
-
-        .p-4 {
-            padding: 1rem;
-        }
-
-        .px-4 {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-
-        .py-2 {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-
-        .py-3 {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
-        }
-
-        .px-6 {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .px-8 {
-            padding-left: 2rem;
-            padding-right: 2rem;
-        }
-
-        .p-6 {
-            padding: 1.5rem;
-        }
-
-        .fixed {
-            position: fixed;
-        }
-
-        .top-10 {
-            top: 2.5rem;
-        }
-
-        .bottom-8 {
-            bottom: 2rem;
-        }
-
-        .gap-2 {
-            gap: 0.5rem;
-        }
-
-        .gap-4 {
-            gap: 1rem;
-        }
-
-        .z-10 {
+        .selected {
+            background-color: #fff7ed !important;
+            border: 3px solid #f97316 !important;
+            transform: scale(1.05);
             z-index: 10;
         }
 
-        .w-11\/12 {
-            width: 91.666667%;
+        .matched {
+            background-color: #f97316 !important;
+            color: white !important;
+            cursor: default;
+            border: 3px solid #ea580c !important;
+            transform: scale(1) !important;
         }
 
-        .w-full {
-            width: 100%;
+        .error {
+            background-color: #fee2e2 !important;
+            border: 3px solid #ef4444 !important;
+            animation: shake 0.4s;
         }
 
-        .max-w-md {
-            max-width: 28rem;
-        }
-
-        .mt-20 {
-            margin-top: 5rem;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .bg-blue-500 {
-            background-color: #3b82f6;
-        }
-
-        .bg-blue-600 {
-            background-color: #2563eb;
-        }
-
-        .bg-gray-200 {
-            background-color: #e5e7eb;
-        }
-
-        .bg-gray-300 {
-            background-color: #d1d5db;
-        }
-
-        .bg-green-500 {
-            background-color: #10b981;
-        }
-
-        .bg-green-600 {
-            background-color: #059669;
-        }
-
-        .text-white {
-            color: #ffffff;
-        }
-
-        .text-gray-500 {
-            color: #6b7280;
-        }
-
-        .text-gray-700 {
-            color: #374151;
-        }
-
-        .rounded-full {
-            border-radius: 9999px;
-        }
-
-        .rounded-lg {
-            border-radius: 0.5rem;
-        }
-
-        .rounded-2xl {
-            border-radius: 1rem;
-        }
-
-        .font-bold {
-            font-weight: 700;
-        }
-
-        .font-medium {
-            font-weight: 500;
-        }
-
-        .shadow-lg {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        .shadow-xl {
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-
-        .border-2 {
-            border-width: 2px;
-        }
-
-        .border-gray-200 {
-            border-color: #e5e7eb;
-        }
-
-        .border-blue-400 {
-            border-color: #60a5fa;
-        }
-
-        .border-green-400 {
-            border-color: #34d399;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            transition: transform 0.1s, background-color 0.2s;
-        }
-
-        button:hover {
-            filter: brightness(0.95);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        input {
-            flex: 1;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #3b82f6;
-        }
-
-        input[type="text"] {
-            font-size: 1rem;
-        }
-
-        .char-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 0.5rem;
-            min-width: 4rem;
-        }
-
-        .hiragana {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #ef4444;
-            line-height: 1.2;
-        }
-
-        .romaji {
-            font-size: 2rem;
-            font-weight: bold;
-            height: 2.5rem;
-            color: #3b82f6;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .romaji.revealed {
-            opacity: 1;
-        }
-
-        #translation-display {
-            font-size: 1.5rem;
-            color: #10b981;
-            font-weight: 600;
-            margin-top: 2rem;
-            min-height: 2rem;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #translation-display.visible {
-            opacity: 1;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
     </style>
 </head>
-<body>
-    <div class="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-        <!-- Controls -->
-        <div class="fixed top-10 flex flex-col items-center gap-4 z-10">
-            <div class="flex flex-wrap gap-4 justify-center">
-                <button 
-                    onclick="revealNext()" 
-                    id="reveal-btn" 
-                    class="bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-blue-600 active:scale-95 transition-transform"
-                >
-                    Onthul volgende letter
-                </button>
-                <button 
-                    onclick="nextWord()" 
-                    class="bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-300 active:scale-95 transition-transform"
-                >
-                    Volgende woord
-                </button>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">日本語 Memory</h1>
+            <p class="text-gray-600">Vind de sets van 3: Hiragana, Romaji en Nederlands</p>
+        </header>
+
+        <!-- Status Overzicht -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <div class="flex flex-col gap-1">
+                <div id="status-text" class="font-bold text-orange-600 text-sm uppercase tracking-wider">Sets gevonden: 0 / 6</div>
+                <div id="score-text" class="font-black text-gray-700 text-2xl">Score: 0</div>
             </div>
-            <p id="status-text" class="text-gray-500 font-medium"></p>
+            <div class="flex gap-3">
+                <button onclick="pickNewSet()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl transition font-bold shadow-md hover:shadow-lg active:scale-95">Nieuwe set</button>
+                <button onclick="resetCurrentGame()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl transition font-bold active:scale-95">Reset</button>
+            </div>
         </div>
 
-        <!-- Display Area -->
-        <div id="word-display" class="flex flex-wrap justify-center px-4 text-center mt-20"></div>
+        <!-- Speelveld -->
+        <div id="game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8">
+            <!-- Kaarten worden hier door JS geplaatst -->
+        </div>
 
-        <!-- Translation Area -->
-        <div id="translation-display"></div>
-
-        <!-- Add Word Interface -->
-        <div class="fixed bottom-8 bg-white p-6 rounded-2xl shadow-xl flex flex-col gap-2 z-10 w-11/12 max-w-md">
-            <input 
-                type="text" 
-                id="new-word-input" 
-                placeholder="Typ Hiragana of Romaji..." 
-                class="flex-1 border-2 border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
-            >
-            <input 
-                type="text" 
-                id="translation-input" 
-                placeholder="Vertaling (optioneel)..." 
-                class="flex-1 border-2 border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-green-400"
-            >
-            <button 
-                onclick="addNewWord()" 
-                class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-600 w-full"
-            >
-                Voeg Toe
+        <!-- Toevoeg sectie -->
+        <section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 text-center">Nieuwe woorden toevoegen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 ml-1">Hiragana</label>
+                    <input type="text" id="input-kana" placeholder="ねこ" class="w-full border-2 p-3 rounded-xl focus:border-orange-500 outline-none transition bg-gray-50">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 ml-1">Romaji</label>
+                    <input type="text" id="input-romaji" placeholder="Neko" class="w-full border-2 p-3 rounded-xl focus:border-orange-500 outline-none transition bg-gray-50">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 ml-1">Nederlands</label>
+                    <input type="text" id="input-nl" placeholder="Kat" class="w-full border-2 p-3 rounded-xl focus:border-orange-500 outline-none transition bg-gray-50">
+                </div>
+            </div>
+            <button onclick="addNewPhrase()" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-4 rounded-xl transition-all shadow-md active:scale-95">
+                Opslaan & Start Oefening
             </button>
+        </section>
+
+        <!-- Win-scherm (Modal) -->
+        <div id="success-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50 backdrop-blur-md">
+            <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl scale-in">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 id="congrats-kana" class="text-3xl font-black mb-2 text-gray-800"></h2>
+                <p id="congrats-romaji" class="text-gray-500 italic mb-2 text-xl"></p>
+                <p id="congrats-nl" class="text-xl text-orange-600 font-bold mb-6"></p>
+                <button onclick="closeModal()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-2xl transition shadow-lg active:scale-95">Speel nog eens</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const hiraganaLib = {
-            'あ':'a', 'い':'i', 'う':'u', 'え':'e', 'お':'o',
-            'か':'ka', 'き':'ki', 'く':'ku', 'け':'ke', 'こ':'ko',
-            'さ':'sa', 'し':'shi', 'す':'su', 'せ':'se', 'そ':'so',
-            'た':'ta', 'ち':'chi', 'つ':'tsu', 'て':'te', 'と':'to',
-            'な':'na', 'に':'ni', 'ぬ':'nu', 'ね':'ne', 'の':'no',
-            'は':'ha', 'ひ':'hi', 'ふ':'fu', 'へ':'he', 'ほ':'ho',
-            'ま':'ma', 'み':'mi', 'む':'mu', 'め':'me', 'も':'mo',
-            'や':'ya', 'ゆ':'yu', 'よ':'yo',
-            'ら':'ra', 'り':'ri', 'る':'ru', 'れ':'re', 'ろ':'ro',
-            'わ':'wa', 'を':'wo', 'ん':'n',
-            'が':'ga', 'ぎ':'gi', 'ぐ':'gu', 'げ':'ge', 'ご':'go',
-            'ざ':'za', 'じ':'ji', 'ず':'zu', 'ぜ':'ze', 'ぞ':'zo',
-            'だ':'da', 'ぢ':'ji', 'づ':'zu', 'で':'de', 'ど':'do',
-            'ば':'ba', 'び':'bi', 'ぶ':'bu', 'べ':'be', 'ぼ':'bo',
-            'ぱ':'pa', 'ぴ':'pi', 'ぷ':'pu', 'ぺ':'pe', 'ぽ':'po'
-        };
-
-        const romajiToHira = {
-            'a':'あ', 'i':'い', 'u':'う', 'e':'え', 'o':'お',
-            'ka':'か', 'ki':'き', 'ku':'く', 'ke':'け', 'ko':'こ',
-            'sa':'さ', 'shi':'し', 'su':'す', 'se':'せ', 'so':'そ',
-            'ta':'た', 'chi':'ち', 'tsu':'つ', 'te':'て', 'to':'と',
-            'na':'な', 'ni':'に', 'nu':'ぬ', 'ne':'ね', 'no':'の',
-            'ha':'は', 'hi':'ひ', 'fu':'ふ', 'he':'へ', 'ho':'ほ',
-            'ma':'ま', 'mi':'み', 'mu':'む', 'me':'め', 'mo':'も',
-            'ya':'や', 'yu':'ゆ', 'yo':'よ',
-            'ra':'ら', 'ri':'り', 'ru':'る', 're':'れ', 'ro':'ろ',
-            'wa':'わ', 'wo':'を', 'n':'ん',
-            'ga':'が', 'gi':'ぎ', 'gu':'ぐ', 'ge':'げ', 'go':'ご',
-            'za':'ざ', 'ji':'じ', 'zu':'ず', 'ze':'ぜ', 'zo':'ぞ',
-            'da':'だ', 'de':'で', 'do':'ど',
-            'ba':'ば', 'bi':'び', 'bu':'ぶ', 'be':'べ', 'bo':'ぼ',
-            'pa':'ぱ', 'pi':'ぴ', 'pu':'ぷ', 'pe':'ぺ', 'po':'ぽ'
-        };
-
-        const translations = {
-            "おはよう": "Goedemorgen!",
-            "こんにちは": "Goedendag / Hallo",
-            "げんきですか": "Hoe gaat het met je?",
-            "なまえはなんですか": "Wat is je naam?",
-            "なまえはウィムです": "Mijn naam is Wim."
-        };
-
-        let words = [
-            "おはよう", 
-            "こんにちは", 
-            "げんきですか", 
-            "なまえはなんですか", 
-            "なまえはウィムです"
+        const allPhrasesDatabase = [
+            { id: 1, kana: "こんにちは", romaji: "Konnichiwa", nl: "Hallo" },
+            { id: 2, kana: "ありがとうございます", romaji: "Arigatou gozaimasu", nl: "Dank u wel" },
+            { id: 3, kana: "すみません", romaji: "Sumimasen", nl: "Pardon" },
+            { id: 4, kana: "おはよう", romaji: "Ohayou", nl: "Goedemorgen" },
+            { id: 5, kana: "さようなら", romaji: "Sayounara", nl: "Tot ziens" },
+            { id: 6, kana: "おやすみなさい", romaji: "Oyasumi nasai", nl: "Welterusten" },
+            { id: 7, kana: "はじめまして", romaji: "Hajimemashite", nl: "Aangenaam" },
+            { id: 8, kana: "おいしいです", romaji: "Oishii desu", nl: "Het is lekker" },
+            { id: 9, kana: "ねこ", romaji: "Neko", nl: "Kat" },
+            { id: 10, kana: "いぬ", romaji: "Inu", nl: "Hond" },
+            { id: 11, kana: "みず", romaji: "Mizu", nl: "Water" },
+            { id: 12, kana: "おちゃ", romaji: "Ocha", nl: "Thee" }
         ];
-        let currentIndex = 0;
-        let revealedCount = 0;
-        let customTranslations = {};
 
-        function convertToHiragana(text) {
-            let result = "";
-            let i = 0;
-            let lowerText = text.toLowerCase();
-            while (i < lowerText.length) {
-                let found = false;
-                if (i + 2 < lowerText.length) {
-                    let chunk = lowerText.substring(i, i + 3);
-                    if (romajiToHira[chunk]) {
-                        result += romajiToHira[chunk];
-                        i += 3;
-                        found = true;
-                    }
-                }
-                if (!found && i + 1 < lowerText.length) {
-                    let chunk = lowerText.substring(i, i + 2);
-                    if (romajiToHira[chunk]) {
-                        result += romajiToHira[chunk];
-                        i += 2;
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    let chunk = lowerText[i];
-                    result += (romajiToHira[chunk] || chunk);
-                    i += 1;
-                }
+        const congratulations = [
+            { kana: "すごい！", romaji: "Sugoi!", nl: "Geweldig!" },
+            { kana: "おめでとう！", romaji: "Omedetou!", nl: "Gefeliciteerd!" },
+            { kana: "やった！", romaji: "Yatta!", nl: "Je hebt het gedaan!" }
+        ];
+
+        let activePhrases = [];
+        let selectedCards = [];
+        let matchedIds = [];
+        let totalScore = 0;
+        const GAME_SIZE = 6;
+
+        function pickNewSet(newlyAdded = null) {
+            let pool = [...allPhrasesDatabase];
+            let selection = [];
+
+            if (newlyAdded) {
+                selection.push(newlyAdded);
+                pool = pool.filter(p => p.id !== newlyAdded.id);
             }
-            return result;
+
+            pool.sort(() => Math.random() - 0.5);
+            selection = selection.concat(pool.slice(0, GAME_SIZE - selection.length));
+
+            activePhrases = selection;
+            initGame();
         }
 
-        function getRomaji(char, index, fullWord) {
-            if (char === 'は') {
-                const isAtEnd = (index === fullWord.length - 1);
-                if (isAtEnd || fullWord.includes("なまえは")) {
-                    return 'wa';
-                }
-                return 'ha';
-            }
-            return hiraganaLib[char] || char;
-        }
-
-        function displayWord() {
-            const display = document.getElementById('word-display');
-            const transDisplay = document.getElementById('translation-display');
-            display.innerHTML = '';
-            transDisplay.textContent = '';
-            transDisplay.classList.remove('visible');
-            revealedCount = 0;
+        function initGame() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = '';
+            selectedCards = [];
+            matchedIds = [];
             
-            const currentWord = words[currentIndex];
-            
-            [...currentWord].forEach((char, index) => {
-                const container = document.createElement('div');
-                container.className = 'char-container';
-
-                const romaSpan = document.createElement('span');
-                romaSpan.textContent = getRomaji(char, index, currentWord);
-                romaSpan.className = 'romaji';
-                romaSpan.id = `romaji-${index}`;
-
-                const hiraSpan = document.createElement('span');
-                hiraSpan.textContent = char;
-                hiraSpan.className = 'hiragana';
-
-                container.appendChild(romaSpan);
-                container.appendChild(hiraSpan);
-                display.appendChild(container);
+            let cardsData = [];
+            activePhrases.forEach(p => {
+                cardsData.push({ id: p.id, text: p.kana });
+                cardsData.push({ id: p.id, text: p.romaji });
+                cardsData.push({ id: p.id, text: p.nl });
             });
+
+            cardsData.sort(() => Math.random() - 0.5);
+
+            cardsData.forEach(data => {
+                const div = document.createElement('div');
+                div.className = 'card bg-white p-3 flex items-center justify-center text-center rounded-2xl border-2 border-gray-100 shadow-sm text-sm sm:text-base font-bold text-gray-700 hover:border-orange-200';
+                div.textContent = data.text;
+                div.dataset.id = data.id;
+                div.onclick = () => selectCard(div);
+                grid.appendChild(div);
+            });
+            
             updateStatus();
         }
 
-        function revealNext() {
-            const currentWord = words[currentIndex];
-            if (revealedCount < currentWord.length) {
-                const el = document.getElementById(`romaji-${revealedCount}`);
-                if (el) {
-                    el.classList.add('revealed');
-                    revealedCount++;
-                    updateStatus();
-                }
-            }
+        function selectCard(el) {
+            if (el.classList.contains('matched') || el.classList.contains('selected')) return;
+            if (selectedCards.length >= 3) return;
 
-            if (revealedCount === currentWord.length) {
-                const transDisplay = document.getElementById('translation-display');
-                transDisplay.textContent = customTranslations[currentWord] || translations[currentWord] || "(Geen vertaling beschikbaar)";
-                transDisplay.classList.add('visible');
+            el.classList.add('selected');
+            selectedCards.push(el);
+
+            if (selectedCards.length === 3) {
+                checkMatch();
             }
         }
 
-        function nextWord() {
-            currentIndex = (currentIndex + 1) % words.length;
-            displayWord();
+        function checkMatch() {
+            const ids = selectedCards.map(c => c.dataset.id);
+            const isMatch = ids.every(id => id === ids[0]);
+
+            if (isMatch) {
+                totalScore += 10;
+                const currentCards = [...selectedCards];
+                setTimeout(() => {
+                    currentCards.forEach(card => {
+                        card.classList.replace('selected', 'matched');
+                    });
+                    matchedIds.push(ids[0]);
+                    updateStatus();
+                    checkWin();
+                }, 300);
+                selectedCards = [];
+            } else {
+                const currentCards = [...selectedCards];
+                setTimeout(() => {
+                    currentCards.forEach(card => {
+                        card.classList.add('error');
+                    });
+                    
+                    setTimeout(() => {
+                        currentCards.forEach(card => {
+                            card.classList.remove('selected', 'error');
+                        });
+                    }, 600);
+                }, 400);
+                selectedCards = [];
+            }
         }
 
         function updateStatus() {
-            const currentWord = words[currentIndex];
-            const status = document.getElementById('status-text');
-            status.textContent = `Teken ${revealedCount} van ${currentWord.length}`;
-            
-            const btn = document.getElementById('reveal-btn');
-            btn.disabled = (revealedCount >= currentWord.length);
-            btn.style.opacity = btn.disabled ? "0.5" : "1";
+            document.getElementById('status-text').textContent = `Sets gevonden: ${matchedIds.length} / ${activePhrases.length}`;
+            document.getElementById('score-text').textContent = `Score: ${totalScore}`;
         }
 
-        function addNewWord() {
-            const wordInput = document.getElementById('new-word-input');
-            const transInput = document.getElementById('translation-input');
-            const val = wordInput.value.trim();
-            const trans = transInput.value.trim();
-            
-            if (val) {
-                const hasJapanese = /[\u3040-\u309F]/.test(val);
-                const finalWord = hasJapanese ? val : convertToHiragana(val);
-                
-                if (!words.includes(finalWord)) {
-                    words.push(finalWord);
-                    if (trans) {
-                        customTranslations[finalWord] = trans;
-                    }
-                    currentIndex = words.length - 1;
-                } else {
-                    if (trans) {
-                        customTranslations[finalWord] = trans;
-                    }
-                    currentIndex = words.indexOf(finalWord);
-                }
-                
-                wordInput.value = '';
-                transInput.value = '';
-                displayWord();
+        function checkWin() {
+            if (matchedIds.length === activePhrases.length) {
+                const msg = congratulations[Math.floor(Math.random() * congratulations.length)];
+                document.getElementById('congrats-kana').textContent = msg.kana;
+                document.getElementById('congrats-romaji').textContent = msg.romaji;
+                document.getElementById('congrats-nl').textContent = msg.nl;
+                document.getElementById('success-modal').classList.remove('hidden');
             }
         }
 
-        document.getElementById('new-word-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                addNewWord();
-            }
-        });
+        function addNewPhrase() {
+            const k = document.getElementById('input-kana');
+            const r = document.getElementById('input-romaji');
+            const n = document.getElementById('input-nl');
 
-        document.getElementById('translation-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addNewWord();
-            }
-        });
+            if (!k.value.trim() || !r.value.trim() || !n.value.trim()) return;
 
-        window.onload = displayWord;
+            const newObj = {
+                id: Date.now(),
+                kana: k.value.trim(),
+                romaji: r.value.trim(),
+                nl: n.value.trim()
+            };
+
+            allPhrasesDatabase.push(newObj);
+            k.value = ''; r.value = ''; n.value = '';
+            pickNewSet(newObj);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetCurrentGame() {
+            initGame();
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            pickNewSet();
+        }
+
+        // Start game op laden
+        window.addEventListener('DOMContentLoaded', () => pickNewSet());
     </script>
 </body>
 </html>
